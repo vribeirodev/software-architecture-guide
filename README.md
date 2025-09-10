@@ -3,16 +3,19 @@
 Guia prático de sugestão de arquitetura ( NÃO SÃO MANDAMENTOS ESCRITOS EM PEDRA )
 
 ## Índice
-1. **Análise inicial**
-2. **Estruturas por complexidade**
-3. **Decisão: quando criar cada camada**
-4. **Framework de integrações**
-5. **Templates por cenário**
-6. **Framework de nomenclatura**
-7. **Exemplos práticos**
-8. **Checklist de validação**
-9. **Patterns específicos**
-10. **Regras finais**
+
+1. [Análise inicial](#1-análise-inicial---o-que-estou-construindo)
+2. [Estruturas por complexidade](#2-estrutura-por-complexidade)
+3. [Decisão: quando criar cada camada](#3-decisão-quando-criar-cada-camada)
+4. [Framework de integrações](#4-framework-de-integrações)
+5. [Templates por cenário](#5-templates-por-cenário)
+6. [Framework de nomenclatura](#6-framework-de-nomenclatura)
+7. [Exemplos práticos](#7-exemplos-práticos)
+8. [Checklist de validação](#8-checklist-de-validação)
+9. [Patterns específicos](#9-patterns-específicos)
+10. [Regras finais](#10-regras-finais)
+
+    
 
 ## 1. ANÁLISE INICIAL - "O QUE ESTOU CONSTRUINDO?"
 
