@@ -720,6 +720,130 @@ class InstantPaymentKeyService:
         # Circuit breaker + cache(se aplicavel) + retry
         return await self._central_bank_client.get_key_info(key)
 ```
+```mermaid
+---
+config:
+  theme: mc
+  look: classic
+  layout: dagre
+---
+flowchart TD
+    subgraph TOP[" "]
+        G["Características"]
+        H["✅ Abstração de APIs externas"]
+        I["✅ Circuit breaker + retry"]
+        J["✅ Cache quando aplicável"]
+        K["✅ Isolamento de dependências"]
+        L["✅ Testabilidade"]
+    end
+    
+    subgraph Exemplos["**Exemplos**"]
+        M["BankPaymentGateway"]
+        N["CentralBankKeyService"]
+        O["CreditScoreGateway"]
+        P["NotificationGateway"]
+    end
+    
+    subgraph MIDDLE[" "]
+        Exemplos
+    end
+    
+    subgraph BOTTOM[" "]
+        A["UseCase"]
+        B["🔌 IPaymentGateway<br/>(Interface)"]
+        C["Gateway Implementation"]
+        D["🛡️ Circuit Breaker"]
+        E["🔄 Retry Logic"]
+        F["💾 Cache Layer"]
+        G2["📧 External API"]
+        H2["⚠️ Fallback Service"]
+        I2["📊 Metrics & Monitoring"]
+        
+        subgraph Adapter["Adapter Pattern"]
+            J2["External Response"]
+            K2["Response Mapper"]
+            L2["Domain Model"]
+        end
+    end
+    
+    G --> H & I & J & K & L
+    A L_A_B_0@-- "Usa abstração<br/>Não conhece implementação" --> B
+    B L_B_C_0@-- "Implementação específica" --> C
+    C L_C_D_0@-- "Proteção contra falhas" --> D
+    D L_D_E_0@-- "Tentativas automáticas" --> E
+    E L_E_F_0@-- "Cache se aplicável" --> F
+    F L_F_G2_0@-- "Chamada externa" --> G2
+    
+    D L_D_H2_0@-- "Se circuit aberto" --> H2
+    C L_C_I2_0@-- "Coleta métricas" --> I2
+    
+    G2 L_G2_J2_0@-- "Resposta externa" --> J2
+    J2 L_J2_K2_0@-- "Converte formato" --> K2
+    K2 L_K2_L2_0@-- "Para domínio" --> L2
+    L2 L_L2_A_0@-- "Retorna modelo" --> A
+    
+    H2 L_H2_A_0@-- "Resposta degradada" --> A
+    
+    TOP -.-> MIDDLE
+    MIDDLE -.-> BOTTOM
+    
+    G:::Peach
+    H:::Sky
+    I:::Sky
+    J:::Sky
+    K:::Sky
+    L:::Sky
+    M:::Peach
+    N:::Peach
+    O:::Peach
+    P:::Peach
+    A:::Aqua
+    B:::Aqua
+    C:::Aqua
+    D:::Pine
+    E:::Pine
+    F:::Pine
+    G2:::Pine
+    H2:::Pine
+    I2:::Pine
+    J2:::Sky
+    K2:::Sky
+    L2:::Sky
+    
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    
+    style G stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style A stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style B stroke-width:4px,stroke-dasharray: 0,stroke:#000000,fill:#E1BEE7,color:#000000
+    style C stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style D stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style E stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style F stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style G2 stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style H2 stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style I2 stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style TOP fill:none,stroke:none
+    style MIDDLE fill:none,stroke:none
+    style BOTTOM fill:none,stroke:none
+    style Adapter fill:#f9f9f9,stroke:#ddd,stroke-width:2px
+    
+    L_A_B_0@{ animation: slow }
+    L_B_C_0@{ animation: slow }
+    L_C_D_0@{ animation: slow }
+    L_D_E_0@{ animation: slow }
+    L_E_F_0@{ animation: slow }
+    L_F_G2_0@{ animation: slow }
+    L_D_H2_0@{ animation: slow }
+    L_C_I2_0@{ animation: slow }
+    L_G2_J2_0@{ animation: slow }
+    L_J2_K2_0@{ animation: slow }
+    L_K2_L2_0@{ animation: slow }
+    L_L2_A_0@{ animation: slow }
+    L_H2_A_0@{ animation: slow }
+```
 
 ### Redis (Cache/Session)
 ```python
