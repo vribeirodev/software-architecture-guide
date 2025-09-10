@@ -663,7 +663,7 @@ flowchart TD
     L_I2_C_0@{ animation: slow }
     L_C_B_0@{ animation: slow }
     L_B_U2_0@{ animation: slow }
-``
+``` 
 ## 3. DECISÃO: QUANDO CRIAR CADA CAMADA
 
 ### Service Layer - Quando Criar
@@ -1364,7 +1364,7 @@ sequenceDiagram
         Queue->>Queue: 📤 PaymentCompletedEvent
         Note right of Queue: Handlers processam:<br/>• Atualizar saldo<br/>• Enviar SMS<br/>• Log auditoria<br/>• Atualizar analytics
     end
-``
+``` 
 ## 10. REGRAS FINAIS
 
 1. **Comece Simples → Evolua para Complexo**
