@@ -872,6 +872,138 @@ class WebhookEventProcessor:
     async def handle_payment_webhook(self, event: PaymentWebhookEvent)
 ```
 
+```mermaid
+---
+config:
+  theme: mc
+  look: classic
+  layout: dagre
+---
+flowchart TD
+    subgraph TOP[" "]
+        G["Tipos de Mensagem"]
+        H["📢 EVENTO = algo aconteceu"]
+        I["⚡ COMANDO = faça algo"]
+        J["📧 NOTIFICAÇÃO = informe alguém"]
+        K["🔄 Processamento assíncrono"]
+        L["📊 Desacoplamento de sistemas"]
+    end
+    
+    subgraph Exemplos["**Exemplos**"]
+        M["PaymentCompletedEvent"]
+        N["ProcessPaymentWebhookCommand"]
+        O["NotifyPaymentStatusNotification"]
+        P["CustomerAccountCreatedEvent"]
+    end
+    
+    subgraph MIDDLE[" "]
+        Exemplos
+    end
+    
+    subgraph BOTTOM[" "]
+        A["💳 Payment Service"]
+        B["📤 Event Publisher"]
+        C["🔔 Message Queue/Topic"]
+        D["📥 Event Handler A"]
+        E["📥 Event Handler B"]
+        F["📥 Command Processor"]
+        G2["📧 Notification Service"]
+        H2["💾 Audit Service"]
+        I2["📊 Analytics Service"]
+        J2["📱 Push Notification"]
+        K2["✉️ Email Service"]
+        L2["📱 SMS Service"]
+        
+        subgraph EventFlow["Event Flow"]
+            M2["PaymentCompleted"]
+            N2["UpdateAccountBalance"]
+            O2["SendConfirmation"]
+            P2["LogTransaction"]
+        end
+    end
+    
+    G --> H & I & J & K & L
+    A L_A_B_0@-- "Publica evento<br/>PaymentCompleted" --> B
+    B L_B_C_0@-- "Envia para fila" --> C
+    C L_C_D_0@-- "Consome evento" --> D
+    C L_C_E_0@-- "Consome evento" --> E
+    C L_C_F_0@-- "Processa comando" --> F
+    
+    D L_D_H2_0@-- "Registra auditoria" --> H2
+    E L_E_I2_0@-- "Atualiza métricas" --> I2
+    F L_F_G2_0@-- "Dispara notificação" --> G2
+    
+    G2 L_G2_J2_0@-- "Push notification" --> J2
+    G2 L_G2_K2_0@-- "Email confirmação" --> K2
+    G2 L_G2_L2_0@-- "SMS backup" --> L2
+    
+    M2 L_M2_N2_0@-- "Gera comando" --> N2
+    N2 L_N2_O2_0@-- "Gera notificação" --> O2
+    O2 L_O2_P2_0@-- "Gera evento auditoria" --> P2
+    
+    TOP -.-> MIDDLE
+    MIDDLE -.-> BOTTOM
+    
+    G:::Peach
+    H:::Sky
+    I:::Sky
+    J:::Sky
+    K:::Sky
+    L:::Sky
+    M:::Peach
+    N:::Peach
+    O:::Peach
+    P:::Peach
+    A:::Aqua
+    B:::Aqua
+    C:::Pine
+    D:::Aqua
+    E:::Aqua
+    F:::Aqua
+    G2:::Aqua
+    H2:::Aqua
+    I2:::Aqua
+    J2:::Pine
+    K2:::Pine
+    L2:::Pine
+    M2:::Sky
+    N2:::Sky
+    O2:::Sky
+    P2:::Sky
+    
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    
+    style G stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style A stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style B stroke-width:4px,stroke-dasharray: 0,stroke:#000000,fill:#E1BEE7,color:#000000
+    style C stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style D stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style E stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style F stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style G2 stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style TOP fill:none,stroke:none
+    style MIDDLE fill:none,stroke:none
+    style BOTTOM fill:none,stroke:none
+    style EventFlow fill:#f0f8ff,stroke:#4682b4,stroke-width:2px
+    
+    L_A_B_0@{ animation: slow }
+    L_B_C_0@{ animation: slow }
+    L_C_D_0@{ animation: slow }
+    L_C_E_0@{ animation: slow }
+    L_C_F_0@{ animation: slow }
+    L_D_H2_0@{ animation: slow }
+    L_E_I2_0@{ animation: slow }
+    L_F_G2_0@{ animation: slow }
+    L_G2_J2_0@{ animation: slow }
+    L_G2_K2_0@{ animation: slow }
+    L_G2_L2_0@{ animation: slow }
+    L_M2_N2_0@{ animation: slow }
+    L_N2_O2_0@{ animation: slow }
+    L_O2_P2_0@{ animation: slow }
+```
 ## 5. TEMPLATES POR CENÁRIO
 
 ### Template: Consulta Simples
