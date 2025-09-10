@@ -239,6 +239,111 @@ class SimulateInstantLoanUseCase:
 # Use case orquestra, mas sem services intermediários
 ```
 
+```mermaid
+---
+config:
+  theme: mc
+  look: classic
+  layout: dagre
+---
+flowchart TD
+ subgraph TOP[" "]
+        G["Características"]
+        H["✅ 2-3 fontes de dados"]
+        I["✅ Validações complexas"]
+        J["✅ 1-2 side effects"]
+        K["✅ Orquestração moderada"]
+  end
+ subgraph Exemplos["**Exemplos**"]
+        L["POST /loans/simulate"]
+        M["POST /payments/validate"]
+        N["PUT /customers/update"]
+  end
+ subgraph MIDDLE[" "]
+        Exemplos
+  end
+ subgraph BOTTOM[" "]
+        A["🌐 HTTP Request"]
+        B["Controller"]
+        C["UseCase"]
+        D["Validation Service"]
+        E["Domain Service"]
+        F["Repository A"]
+        G2["Repository B"]
+        H2[("💾 Database")]
+        I2[("💾 Database")]
+        J2["🌐 Cliente"]
+        K2["📧 External API"]
+  end
+    G --> H & I & J & K
+    A L_A_B_0@--> B
+    B L_B_C_0@-- Recebe request<br>Valida entrada --> C
+    C L_C_D_0@-- Coordena validações --> D
+    C L_C_E_0@-- Lógica de domínio --> E
+    D L_D_F_0@-- Consulta dados --> F
+    E L_E_G2_0@-- Busca parâmetros --> G2
+    E L_E_K2_0@-- Side effect --> K2
+    F L_F_H2_0@-- Persiste/Consulta --> H2
+    G2 L_G2_I2_0@-- Persiste/Consulta --> I2
+    F L_F_C_0@-- Retorna dados --> C
+    G2 L_G2_C_0@-- Retorna dados --> C
+    D L_D_C_0@-- Resultado validação --> C
+    E L_E_C_0@-- Resultado processamento --> C
+    C L_C_B_0@-- Retorna resultado --> B
+    B L_B_J2_0@-- HTTP Response --> J2
+    TOP -.-> MIDDLE
+    MIDDLE -.-> BOTTOM
+     G:::Peach
+     H:::Sky
+     I:::Sky
+     J:::Sky
+     K:::Sky
+     L:::Peach
+     M:::Peach
+     N:::Peach
+     A:::Sky
+     B:::Aqua
+     C:::Aqua
+     D:::Aqua
+     E:::Aqua
+     F:::Aqua
+     G2:::Aqua
+     H2:::Pine
+     I2:::Pine
+     J2:::Sky
+     K2:::Pine
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    style G stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style A stroke-width:4px,stroke-dasharray: 0,stroke:#000000,fill:#E1BEE7,color:#000000
+    style B stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style C stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style D stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style E stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style F stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style G2 stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style TOP fill:none,stroke:none
+    style MIDDLE fill:none,stroke:none
+    style BOTTOM fill:none,stroke:none
+    L_A_B_0@{ animation: slow } 
+    L_B_C_0@{ animation: slow } 
+    L_C_D_0@{ animation: slow } 
+    L_C_E_0@{ animation: slow } 
+    L_D_F_0@{ animation: slow } 
+    L_E_G2_0@{ animation: slow } 
+    L_E_K2_0@{ animation: slow } 
+    L_F_H2_0@{ animation: slow } 
+    L_G2_I2_0@{ animation: slow } 
+    L_F_C_0@{ animation: slow } 
+    L_G2_C_0@{ animation: slow } 
+    L_D_C_0@{ animation: slow } 
+    L_E_C_0@{ animation: slow } 
+    L_C_B_0@{ animation: slow } 
+    L_B_J2_0@{ animation: slow }
+```
+
 ### Nível COMPLEXA
 ```python
 # Estrutura: Rota → UseCase → Multiple Services → Multiple Repos + External
