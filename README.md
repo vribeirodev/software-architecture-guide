@@ -2,6 +2,18 @@
 
 Guia prático de sugestão de arquitetura ( NÃO SÃO MANDAMENTOS ESCRITOS EM PEDRA )
 
+## Índice
+1. **Análise inicial**
+2. **Estruturas por complexidade**
+3. **Decisão: quando criar cada camada**
+4. **Framework de integrações**
+5. **Templates por cenário**
+6. **Framework de nomenclatura**
+7. **Exemplos práticos**
+8. **Checklist de validação**
+9. **Patterns específicos**
+10. **Regras finais**
+
 ## 1. ANÁLISE INICIAL - "O QUE ESTOU CONSTRUINDO?"
 
 ### Passo 1A: Identifique o Tipo de Operação
