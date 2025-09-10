@@ -363,6 +363,307 @@ class ExecuteInstantPaymentUseCase:
 # Use case coordena services, services coordenam repositories
 ```
 
+```mermaid
+---
+config:
+  theme: mc
+  look: classic
+  layout: dagre
+---
+flowchart TD
+    subgraph TOP[" "]
+        G["Características"]
+        H["✅ Múltiplas fontes de dados"]
+        I["✅ Orquestração complexa"]
+        J["✅ Múltiplos side effects"]
+        K["✅ Coordenação entre services"]
+    end
+    
+    subgraph Exemplos["**Exemplos**"]
+        L["POST /instant-payments/execute"]
+        M["POST /loans/approve"]
+        N["POST /transfers/international"]
+    end
+    
+    subgraph MIDDLE[" "]
+        Exemplos
+    end
+    
+    subgraph BOTTOM[" "]
+        A["🌐 HTTP Request"]
+        B["Controller"]
+        C["UseCase"]
+        D["Data Preparation Service"]
+        E["Validation Service"]
+        F["Execution Service"]
+        G2["Repository A"]
+        H2["Repository B"]
+        I2["Repository C"]
+        J2[("💾 Database")]
+        K2[("💾 Database")]
+        L2[("💾 Database")]
+        M2["📧 External API A"]
+        N2["📧 External API B"]
+        O2["🔔 Message Queue"]
+        P2["🌐 Cliente"]
+    end
+    
+    G --> H & I & J & K
+    A L_A_B_0@--> B
+    B L_B_C_0@-- "Recebe request<br>Valida entrada" --> C
+    C L_C_D_0@-- "Prepara dados" --> D
+    C L_C_E_0@-- "Executa validações" --> E
+    C L_C_F_0@-- "Processa execução" --> F
+    
+    D L_D_G2_0@-- "Busca dados cliente" --> G2
+    D L_D_H2_0@-- "Busca parâmetros" --> H2
+    E L_E_I2_0@-- "Consulta regras" --> I2
+    E L_E_M2_0@-- "Valida externamente" --> M2
+    F L_F_N2_0@-- "Executa operação" --> N2
+    F L_F_O2_0@-- "Publica evento" --> O2
+    
+    G2 L_G2_J2_0@-- "Persiste/Consulta" --> J2
+    H2 L_H2_K2_0@-- "Persiste/Consulta" --> K2
+    I2 L_I2_L2_0@-- "Persiste/Consulta" --> L2
+    
+    D L_D_C_0@-- "Dados preparados" --> C
+    E L_E_C_0@-- "Validação ok" --> C
+    F L_F_C_0@-- "Resultado execução" --> C
+    C L_C_B_0@-- "Retorna resultado" --> B
+    B L_B_P2_0@-- "HTTP Response" --> P2
+    
+    TOP -.-> MIDDLE
+    MIDDLE -.-> BOTTOM
+    
+    G:::Peach
+    H:::Sky
+    I:::Sky
+    J:::Sky
+    K:::Sky
+    L:::Peach
+    M:::Peach
+    N:::Peach
+    A:::Sky
+    B:::Aqua
+    C:::Aqua
+    D:::Aqua
+    E:::Aqua
+    F:::Aqua
+    G2:::Aqua
+    H2:::Aqua
+    I2:::Aqua
+    J2:::Pine
+    K2:::Pine
+    L2:::Pine
+    M2:::Pine
+    N2:::Pine
+    O2:::Pine
+    P2:::Sky
+    
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    
+    style G stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style A stroke-width:4px,stroke-dasharray: 0,stroke:#000000,fill:#E1BEE7,color:#000000
+    style B stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style C stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style D stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style E stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style F stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style TOP fill:none,stroke:none
+    style MIDDLE fill:none,stroke:none
+    style BOTTOM fill:none,stroke:none
+    
+    L_A_B_0@{ animation: slow }
+    L_B_C_0@{ animation: slow }
+    L_C_D_0@{ animation: slow }
+    L_C_E_0@{ animation: slow }
+    L_C_F_0@{ animation: slow }
+    L_D_G2_0@{ animation: slow }
+    L_D_H2_0@{ animation: slow }
+    L_E_I2_0@{ animation: slow }
+    L_E_M2_0@{ animation: slow }
+    L_F_N2_0@{ animation: slow }
+    L_F_O2_0@{ animation: slow }
+    L_G2_J2_0@{ animation: slow }
+    L_H2_K2_0@{ animation: slow }
+    L_I2_L2_0@{ animation: slow }
+    L_D_C_0@{ animation: slow }
+    L_E_C_0@{ animation: slow }
+    L_F_C_0@{ animation: slow }
+    L_C_B_0@{ animation: slow }
+    L_B_P2_0@{ animation: slow }
+```
+
+```mermaid
+---
+config:
+  theme: mc
+  look: classic
+  layout: dagre
+---
+flowchart TD
+    subgraph TOP[" "]
+        G["Características"]
+        H["✅ Tudo da complexa +"]
+        I["✅ Compensação automática"]
+        J["✅ Auditoria obrigatória"]
+        K["✅ Compliance rigoroso"]
+        L["✅ Circuit breakers"]
+    end
+    
+    subgraph Exemplos["**Exemplos**"]
+        M["POST /open-banking/consents"]
+        N["POST /international-transfers"]
+        O["POST /credit-approvals"]
+        P["POST /regulatory-reports"]
+    end
+    
+    subgraph MIDDLE[" "]
+        Exemplos
+    end
+    
+    subgraph BOTTOM[" "]
+        A["🌐 HTTP Request"]
+        B["Controller"]
+        C["UseCase"]
+        D["Data Preparation Service"]
+        E["Validation Service"]
+        F["Execution Service"]
+        G2["Compensation Service"]
+        H2["Audit Service"]
+        I2["Compliance Service"]
+        J2["Repository A"]
+        K2["Repository B"]
+        L2["Repository C"]
+        M2[("💾 Database A")]
+        N2[("💾 Database B")]
+        O2[("💾 Database C")]
+        P2[("📋 Audit Log")]
+        Q2["📧 External API A"]
+        R2["📧 External API B"]
+        S2["🔔 Message Queue"]
+        T2["⚡ Circuit Breaker"]
+        U2["🌐 Cliente"]
+    end
+    
+    G --> H & I & J & K & L
+    A L_A_B_0@--> B
+    B L_B_C_0@-- "Recebe request<br>Valida entrada" --> C
+    C L_C_H2_0@-- "Inicia auditoria" --> H2
+    C L_C_I2_0@-- "Valida compliance" --> I2
+    C L_C_D_0@-- "Prepara dados" --> D
+    C L_C_E_0@-- "Executa validações" --> E
+    C L_C_F_0@-- "Processa execução" --> F
+    
+    D L_D_J2_0@-- "Busca dados cliente" --> J2
+    D L_D_K2_0@-- "Busca parâmetros" --> K2
+    E L_E_L2_0@-- "Consulta regras" --> L2
+    E L_E_T2_0@-- "Valida com proteção" --> T2
+    T2 L_T2_Q2_0@-- "Circuit breaker" --> Q2
+    F L_F_R2_0@-- "Executa operação" --> R2
+    F L_F_S2_0@-- "Publica evento" --> S2
+    
+    J2 L_J2_M2_0@-- "Persiste/Consulta" --> M2
+    K2 L_K2_N2_0@-- "Persiste/Consulta" --> N2
+    L2 L_L2_O2_0@-- "Persiste/Consulta" --> O2
+    H2 L_H2_P2_0@-- "Registra auditoria" --> P2
+    
+    F L_F_G2_0@-- "Se falhar" --> G2
+    G2 L_G2_F_0@-- "Compensa transação" --> F
+    
+    D L_D_C_0@-- "Dados preparados" --> C
+    E L_E_C_0@-- "Validação ok" --> C
+    F L_F_C_0@-- "Resultado execução" --> C
+    H2 L_H2_C_0@-- "Auditoria registrada" --> C
+    I2 L_I2_C_0@-- "Compliance ok" --> C
+    C L_C_B_0@-- "Retorna resultado" --> B
+    B L_B_U2_0@-- "HTTP Response" --> U2
+    
+    TOP -.-> MIDDLE
+    MIDDLE -.-> BOTTOM
+    
+    G:::Peach
+    H:::Sky
+    I:::Sky
+    J:::Sky
+    K:::Sky
+    L:::Sky
+    M:::Peach
+    N:::Peach
+    O:::Peach
+    P:::Peach
+    A:::Sky
+    B:::Aqua
+    C:::Aqua
+    D:::Aqua
+    E:::Aqua
+    F:::Aqua
+    G2:::Aqua
+    H2:::Aqua
+    I2:::Aqua
+    J2:::Aqua
+    K2:::Aqua
+    L2:::Aqua
+    M2:::Pine
+    N2:::Pine
+    O2:::Pine
+    P2:::Pine
+    Q2:::Pine
+    R2:::Pine
+    S2:::Pine
+    T2:::Pine
+    U2:::Sky
+    
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    
+    style G stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style A stroke-width:4px,stroke-dasharray: 0,stroke:#000000,fill:#E1BEE7,color:#000000
+    style B stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style C stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style D stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style E stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style F stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style G2 stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style H2 stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style I2 stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style TOP fill:none,stroke:none
+    style MIDDLE fill:none,stroke:none
+    style BOTTOM fill:none,stroke:none
+    
+    L_A_B_0@{ animation: slow }
+    L_B_C_0@{ animation: slow }
+    L_C_H2_0@{ animation: slow }
+    L_C_I2_0@{ animation: slow }
+    L_C_D_0@{ animation: slow }
+    L_C_E_0@{ animation: slow }
+    L_C_F_0@{ animation: slow }
+    L_D_J2_0@{ animation: slow }
+    L_D_K2_0@{ animation: slow }
+    L_E_L2_0@{ animation: slow }
+    L_E_T2_0@{ animation: slow }
+    L_T2_Q2_0@{ animation: slow }
+    L_F_R2_0@{ animation: slow }
+    L_F_S2_0@{ animation: slow }
+    L_J2_M2_0@{ animation: slow }
+    L_K2_N2_0@{ animation: slow }
+    L_L2_O2_0@{ animation: slow }
+    L_H2_P2_0@{ animation: slow }
+    L_F_G2_0@{ animation: slow }
+    L_G2_F_0@{ animation: slow }
+    L_D_C_0@{ animation: slow }
+    L_E_C_0@{ animation: slow }
+    L_F_C_0@{ animation: slow }
+    L_H2_C_0@{ animation: slow }
+    L_I2_C_0@{ animation: slow }
+    L_C_B_0@{ animation: slow }
+    L_B_U2_0@{ animation: slow }
+``
 ## 3. DECISÃO: QUANDO CRIAR CADA CAMADA
 
 ### Service Layer - Quando Criar
