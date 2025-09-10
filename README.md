@@ -133,6 +133,90 @@ class GetCustomerAccountsUseCase:
 # SEM services intermediários - direto pro repository
 ```
 
+```mermaid
+---
+config:
+  theme: mc
+  look: classic
+  layout: dagre
+---
+flowchart TD
+ subgraph TOP[" "]
+        H["✅ 1 fonte de dados"]
+        G["Características"]
+        I["✅ Validação básica"]
+        J["✅ Sem side effects"]
+        K["✅ Query ou Command simples"]
+  end
+ subgraph Exemplos["**Exemplos**"]
+        L["GET /accounts/{id}/balance"]
+        M["GET /customers/{document}"]
+        N["POST /simple-validation"]
+  end
+ subgraph MIDDLE[" "]
+        Exemplos
+  end
+ subgraph BOTTOM[" "]
+        B["Controller"]
+        A["🌐 HTTP Request"]
+        C["UseCase"]
+        D["Repository"]
+        E[("💾 Database")]
+        F["🌐 Cliente"]
+  end
+    G --> H & I & J & K
+    A L_A_B_0@--> B
+    B L_B_C_0@-- Recebe request<br>Valida entrada --> C
+    C L_C_D_0@-- Lógica de negócio<br>Orquestração simples --> D
+    D L_D_E_0@-- Consulta/Persiste<br>1 fonte de dados --> E
+    D L_D_C_0@-- Retorna dados --> C
+    C L_C_B_0@-- Retorna resultado --> B
+    B L_B_F_0@-- HTTP Response --> F
+    TOP -.-> MIDDLE
+    MIDDLE -.-> BOTTOM
+     H:::Sky
+     G:::Peach
+     I:::Sky
+     J:::Sky
+     K:::Sky
+     L:::Peach
+     M:::Peach
+     N:::Peach
+     B:::Aqua
+     A:::Sky
+     C:::Aqua
+     D:::Aqua
+     E:::Pine
+     F:::Sky
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    style H stroke-width:4px,stroke-dasharray: 0
+    style G stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style I stroke-width:4px,stroke-dasharray: 0
+    style J stroke-width:4px,stroke-dasharray: 0
+    style K stroke-width:4px,stroke-dasharray: 0
+    style B stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style A stroke-width:4px,stroke-dasharray: 0,stroke:#000000,fill:#E1BEE7,color:#000000
+    style C stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style D stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style E stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style F stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style TOP fill:none,stroke:none
+    style MIDDLE fill:none,stroke:none
+    style BOTTOM fill:none,stroke:none
+    linkStyle 11 stroke:#FFFFFF,fill:none
+    linkStyle 12 stroke:#FFFFFF
+    L_A_B_0@{ animation: slow } 
+    L_B_C_0@{ animation: slow } 
+    L_C_D_0@{ animation: slow } 
+    L_D_E_0@{ animation: slow } 
+    L_D_C_0@{ animation: slow } 
+    L_C_B_0@{ animation: slow } 
+    L_B_F_0@{ animation: slow }
+```
+
 ### Nível MÉDIA
 ```python
 # Estrutura: Rota → UseCase → Repository + Cache(se aplicavel)
