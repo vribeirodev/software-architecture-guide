@@ -31,6 +31,91 @@ Guia prático de sugestão de arquitetura ( NÃO SÃO MANDAMENTOS ESCRITOS EM PE
 - **COMPLEXA** = múltiplas fontes + orquestração + múltiplos side effects
 - **CRÍTICA** = tudo acima + compensação + auditoria + compliance
 
+```mermaid
+---
+config:
+  theme: mc
+  look: classic
+  layout: dagre
+---
+flowchart TD
+    A["Nova Funcionalidade"] --> B{"É uma consulta<br>ou operação?"}
+    B L_B_C_0@-- Consulta --> C["Caminho Simples"]
+    B L_B_D_0@-- Operação --> D{"Quantas fontes<br>de dados?"}
+    D L_D_E_0@-- 1 fonte --> E{"Tem validação<br>básica apenas?"}
+    D L_D_F_0@-- "2-3 fontes" --> F["Complexidade MÉDIA"]
+    D L_D_G_0@-- Múltiplas --> G["Complexidade COMPLEXA"]
+    E L_E_H_0@-- Sim --> H{"Sem side<br>effects?"}
+    E L_E_F_0@-- Não --> F
+    H L_H_I_0@-- Sim --> I["Complexidade SIMPLES<br>Rota → UseCase → Repository"]
+    H L_H_F_0@-- Não --> F
+    F --> J["Rota → UseCase → Repository + Services<br>2-3 fontes + 1-2 side effects"]
+    G L_G_K_0@--> K{"Precisa compensação<br>+ auditoria?"}
+    K L_K_L_0@-- Não --> L["Múltiplas fontes + orquestração<br>+ múltiplos side effects"]
+    K L_K_M_0@-- Sim --> M["Complexidade CRÍTICA<br>+ compensação + compliance"]
+    C L_C_N_0@--> N{"É processamento<br>assíncrono?"}
+    N L_N_O_0@-- Sim --> O["Usar Mensageria ou corrotinas"]
+    N L_N_P_0@-- Não --> P{"É integração<br>externa?"}
+    P L_P_Q_0@-- Sim --> Q["Gateway/Adapter Pattern"]
+    P L_P_I_0@-- Não --> I
+     A:::Sky
+     B:::Peach
+     C:::Sky
+     D:::Peach
+     E:::Peach
+     F:::Sky
+     G:::Sky
+     H:::Peach
+     I:::Aqua
+     J:::Aqua
+     K:::Peach
+     L:::Aqua
+     M:::Aqua
+     N:::Peach
+     O:::Pine
+     O:::Aqua
+     P:::Peach
+     Q:::Aqua
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    style A stroke-width:4px,stroke-dasharray: 0,stroke:#000000,fill:#E1BEE7,color:#000000
+    style B stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style C stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style D stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style E stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style F color:#000000,stroke-width:4px,stroke-dasharray: 0
+    style G stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style H color:#000000,stroke-width:4px,stroke-dasharray: 0
+    style I color:#000000,stroke-width:4px,stroke-dasharray: 0
+    style J stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style K stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style L stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style M stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style N stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style O stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style P stroke-width:4px,stroke-dasharray: 0,color:#000000
+    style Q stroke-width:4px,stroke-dasharray: 0,color:#000000
+    L_B_C_0@{ animation: slow } 
+    L_B_D_0@{ animation: slow } 
+    L_D_E_0@{ animation: slow } 
+    L_D_F_0@{ animation: slow } 
+    L_D_G_0@{ animation: slow } 
+    L_E_H_0@{ animation: slow } 
+    L_E_F_0@{ animation: slow } 
+    L_H_I_0@{ animation: slow } 
+    L_H_F_0@{ animation: slow } 
+    L_G_K_0@{ animation: slow } 
+    L_K_L_0@{ animation: slow } 
+    L_K_M_0@{ animation: slow } 
+    L_C_N_0@{ animation: slow } 
+    L_N_O_0@{ animation: slow } 
+    L_N_P_0@{ animation: slow } 
+    L_P_Q_0@{ animation: slow } 
+    L_P_I_0@{ animation: slow }
+```
+
 ## 2. ESTRUTURA POR COMPLEXIDADE
 
 ### Nível SIMPLES
