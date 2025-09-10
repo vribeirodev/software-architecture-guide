@@ -1271,12 +1271,6 @@ class KYCValidationService:
 ```
 
 ```mermaid
----
-config:
-  theme: mc
-  look: classic
-  layout: dagre
----
 sequenceDiagram
     participant Client as 🌐 Cliente
     participant Controller as Controller
@@ -1292,78 +1286,62 @@ sequenceDiagram
     participant Queue as 🔔 Message Queue
     participant DB as 💾 Database
 
-    Note over Client, DB: 📋 Arquitetura COMPLEXA - Múltiplos Services + Orquestração
+    Note over Client, DB: Arquitetura COMPLEXA - Múltiplos Services + Orquestração
 
     Client->>+Controller: POST /instant-payments/execute
-    Note right of Client: InstantPaymentCommand
-    
     Controller->>+UseCase: execute(command)
     
-    rect rgb(255, 239, 219)
-        Note over UseCase, AccountRepo: 🔄 Fase 1: Preparação de Dados
-        UseCase->>+DataService: prepare(command)
-        DataService->>+AccountRepo: find_by_id(account_id)
-        AccountRepo->>+DB: SELECT account
-        DB-->>-AccountRepo: account_data
-        AccountRepo-->>-DataService: Account
-        
-        DataService->>+PaymentRepo: get_payment_limits(account_id)
-        PaymentRepo->>+DB: SELECT limits
-        DB-->>-PaymentRepo: limits_data
-        PaymentRepo-->>-DataService: PaymentLimits
-        DataService-->>-UseCase: PaymentData
-    end
-
-    rect rgb(226, 235, 255)
-        Note over UseCase, FraudAPI: 🛡️ Fase 2: Validação Anti-Fraude
-        UseCase->>+FraudService: validate(payment_data)
-        FraudService->>+FraudAPI: analyze_transaction(data)
-        FraudAPI-->>-FraudService: fraud_score
-        
-        alt fraud_score > threshold
-            FraudService-->>UseCase: ❌ FraudException
-            UseCase-->>Controller: ❌ ValidationError
-            Controller-->>Client: ❌ 400 Bad Request
-        else fraud_score ok
-            FraudService-->>-UseCase: ✅ ValidationResult
-        end
-    end
-
-    rect rgb(222, 255, 248)
-        Note over UseCase, BankGateway: 💳 Fase 3: Execução do Pagamento
-        UseCase->>+ExecService: process(payment_data)
-        ExecService->>+BankGateway: create_payment_order(order)
-        BankGateway->>+DB: INSERT payment_transaction
-        DB-->>-BankGateway: transaction_id
-        BankGateway-->>-ExecService: PaymentResult
-        
-        alt payment_failed
-            ExecService->>ExecService: log_failure()
-            ExecService-->>UseCase: ❌ PaymentException
-            UseCase-->>Controller: ❌ PaymentError
-            Controller-->>Client: ❌ 500 Internal Error
-        else payment_success
-            ExecService-->>-UseCase: ✅ PaymentResult
-        end
-    end
-
-    rect rgb(240, 248, 255)
-        Note over UseCase, Queue: 📧 Fase 4: Notificação Assíncrona
-        UseCase->>+NotifService: notify_payment_executed(result)
-        NotifService->>+Queue: publish(PaymentCompletedEvent)
-        Queue-->>-NotifService: ✅ event_published
-        NotifService-->>-UseCase: ✅ notification_sent
-    end
-
-    UseCase-->>-Controller: ✅ PaymentResult
-    Controller-->>-Client: ✅ 200 OK PaymentResponse
-
-    Note over Client, DB: ⚡ Processamento assíncrono continua via Message Queue
+    Note over UseCase, AccountRepo: Fase 1: Preparação de Dados
+    UseCase->>+DataService: prepare(command)
+    DataService->>+AccountRepo: find_by_id(account_id)
+    AccountRepo->>+DB: SELECT account
+    DB-->>-AccountRepo: account_data
+    AccountRepo-->>-DataService: Account
     
-    rect rgb(245, 245, 245)
-        Queue->>Queue: 📤 PaymentCompletedEvent
-        Note right of Queue: Handlers processam:<br/>• Atualizar saldo<br/>• Enviar SMS<br/>• Log auditoria<br/>• Atualizar analytics
+    DataService->>+PaymentRepo: get_payment_limits(account_id)
+    PaymentRepo->>+DB: SELECT limits
+    DB-->>-PaymentRepo: limits_data
+    PaymentRepo-->>-DataService: PaymentLimits
+    DataService-->>-UseCase: PaymentData
+
+    Note over UseCase, FraudAPI: Fase 2: Validação Anti-Fraude
+    UseCase->>+FraudService: validate(payment_data)
+    FraudService->>+FraudAPI: analyze_transaction(data)
+    FraudAPI-->>-FraudService: fraud_score
+    
+    alt fraud_score > threshold
+        FraudService-->>UseCase: FraudException
+        UseCase-->>Controller: ValidationError
+        Controller-->>Client: 400 Bad Request
+    else fraud_score ok
+        FraudService-->>-UseCase: ValidationResult
     end
+
+    Note over UseCase, BankGateway: Fase 3: Execução do Pagamento
+    UseCase->>+ExecService: process(payment_data)
+    ExecService->>+BankGateway: create_payment_order(order)
+    BankGateway->>+DB: INSERT payment_transaction
+    DB-->>-BankGateway: transaction_id
+    BankGateway-->>-ExecService: PaymentResult
+    
+    alt payment_failed
+        ExecService-->>UseCase: PaymentException
+        UseCase-->>Controller: PaymentError
+        Controller-->>Client: 500 Internal Error
+    else payment_success
+        ExecService-->>-UseCase: PaymentResult
+    end
+
+    Note over UseCase, Queue: Fase 4: Notificação Assíncrona
+    UseCase->>+NotifService: notify_payment_executed(result)
+    NotifService->>+Queue: publish(PaymentCompletedEvent)
+    Queue-->>-NotifService: event_published
+    NotifService-->>-UseCase: notification_sent
+
+    UseCase-->>-Controller: PaymentResult
+    Controller-->>-Client: 200 OK PaymentResponse
+
+    Note over Queue: Processamento assíncrono continua
 ``` 
 ## 10. REGRAS FINAIS
 
